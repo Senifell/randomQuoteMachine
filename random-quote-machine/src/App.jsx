@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
 import axios from "axios";
 
 function App() {
@@ -36,11 +35,22 @@ function App() {
         const randomQuote =
           res.quotes[Math.floor(Math.random() * res.quotes.length)];
 
+        const newColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
         setQuote({
           quoteText: randomQuote.quote,
           quoteAuthor: randomQuote.author,
-          color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+          color: newColor,
         });
+        document.body.style.backgroundColor = newColor;
+
+        const quoteBox = document.getElementById('quote-box');
+        quoteBox.style.transition = 'opacity 0.5s ease-in-out';
+        quoteBox.style.opacity = '0.5';
+
+        setTimeout(() => {
+          quoteBox.style.opacity = '1';
+        }, 500);
       }
     } catch (error) {
       console.error("Error in handleQuote:", error);
@@ -67,50 +77,44 @@ function App() {
     const canonicalUrl = encodeURIComponent("https://www.tumblr.com/buttons");
     return `https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=${tags}&caption=${caption}&content=${content}&canonicalUrl=${canonicalUrl}&shareSource=tumblr_share_button`;
   };
-
-  const appStyles = {
-    backgroundColor: quote.color,
-    color: quote.color,
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    width: "100vw",
-    display: "flex",
-  };
-
   return (
-    <div id="wrapper" style={appStyles}>
-      <div id="quote-box">
-        <div className="quote-text">
-          <i className="fas fa-quote-left"></i>
-          <span id="text">{quote.quoteText}</span>
-        </div>
-        <div className="quote-author">
-          <span id="author">- {quote.quoteAuthor}</span>
-        </div>
-        <div className="buttons">
-          <a
-            className="button"
-            id="tweet-quote"
-            title="Tweet this quote!"
-            target="_top"
-            href={getTweetUrl()}
-          >
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a
-            class="button"
-            id="tumblr-quote"
-            title="Post this quote on tumblr!"
-            target="_blank"
-            href={getTumblrUrl()}
-          >
-            <i class="fab fa-tumblr"></i>
-          </a>
-          <button class="button" id="new-quote" onClick={handleQuote}>
-            New quote
-          </button>
-        </div>
+    <div id="quote-box" style={{ color: quote.color }}>
+      <div className="quote-text">
+        <i className="fas fa-quote-left"></i>
+        <span id="text">{quote.quoteText}</span>
+      </div>
+      <div className="quote-author">
+        <span id="author">- {quote.quoteAuthor}</span>
+      </div>
+      <div className="buttons">
+        <a
+          className="button"
+          id="tweet-quote"
+          style={{ backgroundColor: quote.color }}
+          title="Tweet this quote!"
+          target="_top"
+          href={getTweetUrl()}
+        >
+          <i className="fab fa-twitter"></i>
+        </a>
+        <a
+          className="button"
+          id="tumblr-quote"
+          style={{ backgroundColor: quote.color }}
+          title="Post this quote on tumblr!"
+          target="_blank"
+          href={getTumblrUrl()}
+        >
+          <i className="fab fa-tumblr"></i>
+        </a>
+        <button
+          className="button"
+          id="new-quote"
+          style={{ backgroundColor: quote.color }}
+          onClick={handleQuote}
+        >
+          New quote
+        </button>
       </div>
     </div>
   );
